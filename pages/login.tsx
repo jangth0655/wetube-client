@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import useMutation from "../libs/mutation";
 import { useEffect } from "react";
 import ErrorMessage from "../components/shared/ErrorMessage";
+import Link from "next/link";
 
 interface LoginForm {
   username: string;
@@ -58,8 +59,15 @@ const Login: NextPage = () => {
 
   return (
     <section className="min-h-screen flex">
-      <div className="relative h-screen w-0 lg:w-[60%]">
-        <Image src={loginImage} layout="fill" objectFit="cover" alt="" />
+      <div className="relative min-h-screen w-0 lg:w-[60%]">
+        <Image
+          src={loginImage}
+          layout="fill"
+          objectFit="cover"
+          alt=""
+          placeholder="blur"
+          priority
+        />
       </div>
 
       <main className="my-48 w-[100%] lg:w-[40%] flex flex-col justify-center items-center ">
@@ -87,8 +95,8 @@ const Login: NextPage = () => {
               placeholder="Password"
             />
           </div>
-          <div className="border-2 p-2 rounded-lg bg-zinc-800 text-zinc-50 text-center hover:bg-zinc-700 cursor-pointer transition-all">
-            <ShareButton text="Continue" loading={loading} />
+          <div className="p-2 rounded-lg bg-zinc-800 text-zinc-50 text-center hover:bg-zinc-700 cursor-pointer transition-all">
+            <ShareButton social={false} text="Continue" loading={loading} />
           </div>
         </form>
         <div onClick={onSignUp} className="text-center mt-10">

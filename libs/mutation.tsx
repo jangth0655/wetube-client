@@ -36,7 +36,7 @@ const useMutation = <T = any,>(url: string): MutationResponse<T> => {
         }));
       }
       setValue((prev) => ({ ...prev, data: response }));
-      console.log("mutation", response);
+      console.log(response);
     } catch (error) {
       setValue((prev) => ({
         ...prev,

@@ -9,7 +9,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <SWRConfig
       value={{
         fetcher: (url: string) =>
-          axios.get(url, { withCredentials: true }).then((data) => data.data),
+          axios.get(url, { withCredentials: true }).then((res) => res.data),
       }}
     >
       <Component {...pageProps} />
