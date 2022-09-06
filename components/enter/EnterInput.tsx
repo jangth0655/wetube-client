@@ -1,10 +1,18 @@
+import { UseFormRegisterReturn } from "react-hook-form";
+
 interface EnterInputProps {
   type: string;
   id: string;
   placeholder: string;
+  register?: UseFormRegisterReturn;
 }
 
-const EnterInput: React.FC<EnterInputProps> = ({ type, id, placeholder }) => {
+const EnterInput: React.FC<EnterInputProps> = ({
+  type,
+  id,
+  placeholder,
+  register,
+}) => {
   return (
     <div className="w-full flex flex-col space-y-4">
       <input
@@ -12,6 +20,7 @@ const EnterInput: React.FC<EnterInputProps> = ({ type, id, placeholder }) => {
         id={id}
         type={type}
         placeholder={placeholder}
+        {...register}
       />
     </div>
   );
