@@ -1,14 +1,23 @@
 import Image from "next/image";
 import logo from "../public/image/logo/wetube-logo.png";
-import { motion, useAnimation, useScroll, Variants } from "framer-motion";
+import {
+  motion,
+  useAnimation,
+  useScroll,
+  Variants,
+  AnimatePresence,
+} from "framer-motion";
+import { useRouter } from "next/router";
 
 import { FaUser } from "react-icons/fa";
 import { FaVideo } from "react-icons/fa";
 import { FaArrowUp } from "react-icons/fa";
-import { useRouter } from "next/router";
+import { FaPowerOff } from "react-icons/fa";
 
 import { useEffect, useRef, useState } from "react";
 import Search from "./Search";
+import useUser from "../libs/useUser";
+import useMutation from "../libs/mutation";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -23,16 +32,33 @@ const scrollVar: Variants = {
   },
 };
 
+const profileNavVar: Variants = {
+  initial: {
+    scaleY: 0,
+  },
+  animate: {
+    scaleY: 1,
+    transition: {
+      type: "linear",
+    },
+  },
+  exit: {
+    scaleY: 0,
+  },
+};
+
+interface LogOutMutation {
+  ok: boolean;
+}
+
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const router = useRouter();
   const navRef = useRef<HTMLDivElement>(null);
+  const [profileNav, setProfileNav] = useState(false);
+  const { user } = useUser({ isPrivate: false });
 
   const scrollAnimate = useAnimation();
   const { scrollY } = useScroll();
-
-  const onTop = () => {
-    navRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
 
   useEffect(() => {
     scrollY.onChange(() => {
@@ -45,8 +71,45 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     });
   }, [scrollAnimate, scrollY]);
 
+  const [logout, { data, loading }] = useMutation<LogOutMutation>("logout");
+
+  const showProfileNav = () => {
+    setProfileNav((prev) => !prev);
+  };
+
+  const onTop = () => {
+    navRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const onHome = () => {
     router.push("/");
+  };
+
+  const onUpload = () => {
+    router.push("/videos/upload");
+  };
+
+  const onProfile = (id?: string) => {
+    if (!id) return;
+    router.push(`users/${id}`);
+  };
+
+  const userLogout = () => {
+    if (loading) return;
+    logout({});
+    router.replace("login");
+  };
+
+  type UserState = "login" | "logout";
+  const onLoginPage = (state: UserState) => {
+    switch (state) {
+      case "login":
+        router.push("login");
+        break;
+      case "logout":
+        userLogout();
+        break;
+    }
   };
 
   return (
@@ -71,17 +134,63 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </div>
 
-        <div className="flex items-center space-x-5">
+        <div className="flex items-center space-x-5 relative">
           <Search />
-          <div className="bg-zinc-200 rounded-full w-8 h-8 flex justify-center items-center text-zinc-600">
+          <div
+            onClick={showProfileNav}
+            className="bg-zinc-200 rounded-full w-8 h-8 flex justify-center items-center text-zinc-600 cursor-pointer"
+          >
             <FaUser />
           </div>
+          <AnimatePresence>
+            {profileNav ? (
+              <motion.div
+                variants={profileNavVar}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                className="absolute top-8 w-20 h-20 right-6 rounded-3xl bg-gray-700 rounded-tr-none origin-top"
+              >
+                <div className="py-4 px-2 w-full h-full space-y-2 flex justify-center flex-col text-center cursor-pointer">
+                  <span
+                    onClick={() => onProfile(user?._id)}
+                    className="block hover:text-teal-400 transition-all"
+                  >
+                    Profile
+                  </span>
+                  {user ? (
+                    <span
+                      onClick={() => onLoginPage("logout")}
+                      className="block hover:text-teal-400 transition-all"
+                    >
+                      Log Out
+                    </span>
+                  ) : (
+                    <span
+                      onClick={() => onLoginPage("login")}
+                      className="block hover:text-teal-400 transition-all"
+                    >
+                      Log In
+                    </span>
+                  )}
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </div>
       </nav>
 
-      <main className="max-w-4xl m-auto px-2 mt-24">{children}</main>
+      <main
+        onClick={() => setProfileNav(false)}
+        className="max-w-4xl m-auto px-2 pt-24 border-2"
+      >
+        {children}
+      </main>
       <div className="flex justify-center items-center fixed bottom-4 right-4 flex-col space-y-4">
-        <div className="flex justify-center items-center bg-rose-500 rounded-full text-zinc-50  transition-all hover:bg-rose-700 cursor-pointer p-[0.4rem] ">
+        <div
+          onClick={onUpload}
+          className="flex justify-center items-center bg-rose-500 rounded-full text-zinc-50  transition-all hover:bg-rose-700 cursor-pointer p-[0.4rem] "
+        >
           <FaVideo size="1rem" />
         </div>
 

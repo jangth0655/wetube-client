@@ -2,8 +2,9 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import useSWR from "swr";
 import BASE_URL from "../server";
+import { User } from "./interface";
 
-interface User {
+interface IUser {
   ok: boolean;
   user: User;
 }
@@ -14,7 +15,7 @@ interface UserProps {
 
 const useUser = ({ isPrivate }: UserProps) => {
   const router = useRouter();
-  const { data, error } = useSWR<User>(`${BASE_URL}/users/me`);
+  const { data, error } = useSWR<IUser>(`${BASE_URL}/users/me`);
 
   useEffect(() => {
     if (isPrivate) {
@@ -26,7 +27,7 @@ const useUser = ({ isPrivate }: UserProps) => {
     }
   }, [router, isPrivate, data]);
 
-  return { user: data?.user ? data?.user : false, error: !data && !error };
+  return { user: data?.user, error: !data && !error };
 };
 
 export default useUser;
