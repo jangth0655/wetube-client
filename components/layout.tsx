@@ -12,7 +12,6 @@ import { useRouter } from "next/router";
 import { FaUser } from "react-icons/fa";
 import { FaVideo } from "react-icons/fa";
 import { FaArrowUp } from "react-icons/fa";
-import { FaPowerOff } from "react-icons/fa";
 
 import { useEffect, useRef, useState } from "react";
 import Search from "./Search";
@@ -21,6 +20,7 @@ import useMutation from "../libs/mutation";
 
 interface LayoutProps {
   children: React.ReactNode;
+  uploadPage?: boolean;
 }
 
 const scrollVar: Variants = {
@@ -51,7 +51,7 @@ interface LogOutMutation {
   ok: boolean;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, uploadPage }) => {
   const router = useRouter();
   const navRef = useRef<HTMLDivElement>(null);
   const [profileNav, setProfileNav] = useState(false);
@@ -62,7 +62,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   useEffect(() => {
     scrollY.onChange(() => {
-      console.log(window.innerHeight);
       if (scrollY.get() < window.innerHeight / 2) {
         scrollAnimate.start("top");
       } else {
@@ -71,7 +70,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     });
   }, [scrollAnimate, scrollY]);
 
-  const [logout, { data, loading }] = useMutation<LogOutMutation>("logout");
+  const [logout, { loading }] = useMutation<LogOutMutation>("logout");
 
   const showProfileNav = () => {
     setProfileNav((prev) => !prev);
@@ -182,17 +181,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       <main
         onClick={() => setProfileNav(false)}
-        className="max-w-4xl m-auto px-2 pt-24 border-2"
+        className="max-w-4xl m-auto px-2 pt-16 border-2 pb-4 min-h-screen"
       >
         {children}
       </main>
       <div className="flex justify-center items-center fixed bottom-4 right-4 flex-col space-y-4">
-        <div
-          onClick={onUpload}
-          className="flex justify-center items-center bg-rose-500 rounded-full text-zinc-50  transition-all hover:bg-rose-700 cursor-pointer p-[0.4rem] "
-        >
-          <FaVideo size="1rem" />
-        </div>
+        {uploadPage ? null : (
+          <div
+            onClick={onUpload}
+            className="flex justify-center items-center bg-rose-500 rounded-full text-zinc-50  transition-all hover:bg-rose-700 cursor-pointer p-[0.4rem] "
+          >
+            <FaVideo size="1rem" />
+          </div>
+        )}
 
         <motion.div
           onClick={onTop}

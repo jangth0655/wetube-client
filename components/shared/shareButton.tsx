@@ -9,7 +9,7 @@ interface ButtonProps {
 
 const ShareButton: React.FC<ButtonProps> = ({ loading, text, social }) => {
   return social ? (
-    <button className="uppercase flex justify-center items-center w-full space-x-2">
+    <button className="text-zinc-100 uppercase flex justify-center items-center w-full space-x-2">
       {loading ? (
         "Loading..."
       ) : (
@@ -29,7 +29,9 @@ const ShareButton: React.FC<ButtonProps> = ({ loading, text, social }) => {
       )}
     </button>
   ) : (
-    <button className="uppercase">{loading ? "Loading..." : text}</button>
+    <button className="text-zinc-100 uppercase">
+      {loading ? "Loading..." : text}
+    </button>
   );
 };
 export default ShareButton;

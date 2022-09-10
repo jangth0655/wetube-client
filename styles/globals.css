@@ -3,10 +3,14 @@
 @tailwind utilities;
 
 body {
-  @apply bg-gray-100;
+  @apply bg-gray-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-50;
 }
 
 input {
+  @apply outline-none;
+}
+
+textarea {
   @apply outline-none;
 }
 
