@@ -9,7 +9,7 @@ const EnterTitle: React.FC<EnterTitleProps> = ({ title }) => {
   return (
     <>
       <div className="mb-16">
-        <h1 className="text-center font-bold text-zinc-700 uppercase text-3xl ">
+        <h1 className="text-center font-bold text-zinc-700 dark:text-zinc-50 uppercase text-3xl ">
           {title}
         </h1>
         <div className="w-[100%] h-[1px] bg-zinc-300 mt-2" />

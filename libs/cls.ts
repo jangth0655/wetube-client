@@ -1,4 +1,4 @@
-const cls = (className: string[]) => {
+const cls = (...className: string[]) => {
   return className.join(" ");
 };
 

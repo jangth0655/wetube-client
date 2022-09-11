@@ -20,21 +20,22 @@ const useMutation = <T = any,>(url: string): MutationResponse<T> => {
     try {
       setValue((prev) => ({ ...prev, loading: true }));
       const response = await (
-        await fetch(`${process.env.NEXT_PUBLIC_SERVER!}/${url}`, {
+        await axios(`${process.env.NEXT_PUBLIC_SERVER!}/${url}`, {
           method: "POST",
-          body: JSON.stringify(data),
+          data,
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include",
+          withCredentials: true,
         })
-      ).json();
+      ).data;
       if (!response) {
         setValue((prev) => ({
           ...prev,
           error: response.error || "mutation Error",
         }));
       }
+
       setValue((prev) => ({ ...prev, data: response }));
     } catch (error) {
       setValue((prev) => ({

@@ -9,6 +9,10 @@ import ShareButton from "../../components/shared/shareButton";
 import { useForm } from "react-hook-form";
 import ErrorMessage from "../../components/shared/ErrorMessage";
 import useMutation from "../../libs/mutation";
+import axios from "axios";
+import BASE_URL from "../../server";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 interface UploadForm {
   title: string;
@@ -23,25 +27,46 @@ interface UploadMutation {
 }
 
 const VideoUpload = () => {
+  const router = useRouter();
   const { user } = useUser({ isPrivate: true });
   const {
     register,
     handleSubmit,
     formState: { errors },
     setError,
+    watch,
   } = useForm<UploadForm>();
 
   const [upload, { data, loading }] =
     useMutation<UploadMutation>("videos/upload");
 
-  const onValid = (data: UploadForm) => {
+  const onValid = async (data: UploadForm) => {
     if (loading) return;
     if (data.file && data.file.length > 0) {
+      const formData = new FormData();
+      formData.append("file", data.file[0], `${user?.username}_${data.title}`);
+      const videoData = await (
+        await axios(`${BASE_URL}/videos/awsUpload`, {
+          method: "POST",
+          data: formData,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        })
+      ).data;
+
+      upload({ ...data, file: videoData.file.location });
+    } else {
       setError("file", { message: "Video is Required." });
     }
-    console.log(data.file[0]);
-    upload({ ...data, file: data.file[0] });
   };
+
+  useEffect(() => {
+    if (data?.ok) {
+      router.push("/");
+    }
+  }, [data, router]);
 
   const errorMessage =
     errors.title?.message ||
@@ -53,7 +78,11 @@ const VideoUpload = () => {
     <Layout uploadPage={true}>
       <PageTitle title="Upload" />
       <div>
-        <form onSubmit={handleSubmit(onValid)} className="w-full">
+        <form
+          encType="multipart/form-data"
+          onSubmit={handleSubmit(onValid)}
+          className="w-full"
+        >
           <div className="border-2 border-zinc-500 dark:border-zinc-50 rounded-md border-dashed w-[50%] h-48 m-auto transition-all flex justify-center items-center group flex-col space-y-2">
             <div className="text-4xl group-hover:text-orange-500 transition-all opacity-40">
               <FaCloudUploadAlt />
@@ -62,6 +91,7 @@ const VideoUpload = () => {
               <span>Upload Video File</span>
               <input
                 {...register("file", { required: "Video is required" })}
+                name="file"
                 className="hidden"
                 type="file"
                 accept="video/*"
@@ -89,7 +119,6 @@ const VideoUpload = () => {
               register={register("description")}
               id="description"
               label="Description"
-              name="Description"
             />
             <div className="flex justify-center items-center rounded-lg bg-orange-300 p-2 hover:bg-orange-500 transition-all cursor-pointer">
               <ShareButton text="Submit" loading={loading} />
