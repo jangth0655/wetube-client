@@ -55,7 +55,6 @@ const VideoUpload = () => {
           withCredentials: true,
         })
       ).data;
-
       upload({ ...data, file: videoData.file.location });
     } else {
       setError("file", { message: "Video is Required." });

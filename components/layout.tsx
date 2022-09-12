@@ -112,7 +112,7 @@ const Layout: React.FC<LayoutProps> = ({ children, uploadPage }) => {
   };
 
   return (
-    <section className="">
+    <section>
       <nav
         ref={navRef}
         className="p-3 text-zinc-50 bg-zinc-900 flex justify-between items-center"
@@ -186,10 +186,10 @@ const Layout: React.FC<LayoutProps> = ({ children, uploadPage }) => {
         {children}
       </main>
       <div className="flex justify-center items-center fixed bottom-4 right-4 flex-col space-y-4">
-        {uploadPage ? null : (
+        {uploadPage || !user ? null : (
           <div
             onClick={onUpload}
-            className="flex justify-center items-center bg-rose-500 rounded-full text-zinc-50  transition-all hover:bg-rose-700 cursor-pointer p-[0.4rem] "
+            className="flex justify-center items-center bg-rose-500 rounded-full text-zinc-50  transition-all hover:bg-rose-700 cursor-pointer p-[0.4rem]"
           >
             <FaVideo size="1rem" />
           </div>

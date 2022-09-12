@@ -4,9 +4,8 @@ export interface User {
   username: string;
   passwor: string;
   name: string;
-  locatio: string;
-  socialO: string;
-  avatarI: string;
+  location: string;
+  avatarId: string;
   videos: Video[];
   comments: Comment[];
 }
@@ -18,7 +17,7 @@ export interface Comment {
 }
 
 export interface Video {
-  id: string;
+  _id: string;
   url: string;
   title: string;
   description: string;
