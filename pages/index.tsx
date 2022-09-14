@@ -7,7 +7,8 @@ import { Video } from "../libs/interface";
 import useMutation from "../libs/mutation";
 import useUser from "../libs/useUser";
 import BASE_URL from "../server";
-import Player from "react-player/lazy";
+
+import VideoPlayer from "../components/VideoPlayer";
 
 interface Logout {
   ok: boolean;
@@ -27,7 +28,6 @@ const Home: NextPage = () => {
     useMutation<Logout>("logout");
   // withCredentials : 쿠키정보를 공유할 수 있다.
 
-  const [isPlaying, setIsPlaying] = useState(true);
   useEffect(() => {
     if (logoutData?.ok) {
       router.replace("/login");
@@ -38,16 +38,8 @@ const Home: NextPage = () => {
     <Layout>
       <div></div>
       {data?.videos.map((video) => (
-        <div key={video._id} className="flex justify-center items-center ">
-          <div className="w-72 h-64">
-            <Player
-              width="100%"
-              height="100%"
-              url={video.url}
-              controls
-              playing={isPlaying}
-            />
-          </div>
+        <div key={video._id} className="flex justify-center items-center">
+          <VideoPlayer video={video} />
         </div>
       ))}
     </Layout>

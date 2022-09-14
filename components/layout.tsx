@@ -17,6 +17,8 @@ import { useEffect, useRef, useState } from "react";
 import Search from "./Search";
 import useUser from "../libs/useUser";
 import useMutation from "../libs/mutation";
+import ScrollValue from "../libs/ScrollValue";
+import cls from "../libs/cls";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -59,6 +61,7 @@ const Layout: React.FC<LayoutProps> = ({ children, uploadPage }) => {
 
   const scrollAnimate = useAnimation();
   const { scrollY } = useScroll();
+  const { getScrollY } = ScrollValue();
 
   useEffect(() => {
     scrollY.onChange(() => {
@@ -115,8 +118,16 @@ const Layout: React.FC<LayoutProps> = ({ children, uploadPage }) => {
     <section>
       <nav
         ref={navRef}
-        className="p-3 text-zinc-50 bg-zinc-900 flex justify-between items-center"
+        className={cls(
+          "fixed w-full p-3 py-4 text-zinc-50  flex justify-between items-center "
+        )}
       >
+        <div
+          className={cls(
+            getScrollY > 150 ? "blur-md bg-black opacity-80" : "",
+            "absolute w-full h-full left-0 right-0"
+          )}
+        />
         <div className="flex items-center space-x-2">
           <div onClick={onHome} className="relative w-8 h-8 cursor-pointer">
             <Image
@@ -127,7 +138,7 @@ const Layout: React.FC<LayoutProps> = ({ children, uploadPage }) => {
               placeholder="blur"
             />
           </div>
-          <div className="uppercase font-bold">
+          <div className="uppercase font-bold z-50">
             <span className="text-rose-500">we</span>
             <span>tube</span>
           </div>
@@ -181,7 +192,7 @@ const Layout: React.FC<LayoutProps> = ({ children, uploadPage }) => {
 
       <main
         onClick={() => setProfileNav(false)}
-        className="max-w-4xl m-auto px-2 pt-16 border-2 pb-4 min-h-screen"
+        className="max-w-4xl m-auto px-2 pt-32 pb-4 min-h-screen"
       >
         {children}
       </main>
