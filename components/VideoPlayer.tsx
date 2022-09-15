@@ -1,32 +1,38 @@
 /* eslint-disable react/no-unknown-property */
 
 import React, { useRef, useState } from "react";
-import { Video } from "../libs/interface";
+import { User, Video } from "../libs/interface";
 
+import { FaUser } from "react-icons/fa";
 import { FaPlay } from "react-icons/fa";
 import { FaStop } from "react-icons/fa";
 import { FaVolumeMute } from "react-icons/fa";
 import { FaVolumeUp } from "react-icons/fa";
 import { MdFullscreenExit } from "react-icons/md";
+import { HiCursorClick } from "react-icons/hi";
+import Image from "next/image";
+import { useRouter } from "next/router";
 
 interface VideoPlayerProps {
   video: Video;
+  user: User;
 }
 
 let defaultVolume = 0.5;
-let defaultTime = 0;
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ video, user }) => {
+  const router = useRouter();
   const [isPlaying, setIsPlaying] = useState(true);
   const [mute, setMute] = useState(false);
   const [volumeValue, setVolumeValue] = useState(defaultVolume);
   const [completeTime, setCompleteItem] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
 
-  const videoRef = useRef<any>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!videoRef.current) return;
     videoRef.current.volume = Number(event.target.value);
     setVolumeValue(videoRef.current.volume);
   };
@@ -61,19 +67,23 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
   };
 
   const onLoadedMetadata = (e: any) => {
-    setCompleteItem(videoRef.current?.duration);
+    if (!videoRef.current) return;
+    setCompleteItem(videoRef.current.duration);
   };
 
   const onTimeUpdate = (e: any) => {
+    if (!videoRef.current) return;
     setCurrentTime(videoRef.current.currentTime);
   };
 
   const onCurrentTime = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!videoRef.current) return;
     const value = Number(event.target.value);
     videoRef.current.currentTime = value;
   };
 
   const onFullScreen = async () => {
+    if (!videoRef.current) return;
     try {
       await videoRef.current.requestFullscreen();
     } catch (e) {
@@ -83,7 +93,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
   };
 
   return (
-    <div className="w-[30rem] h-[24rem] shadow-black shadow-lg bg-zinc-900 rounded-md">
+    <div className="w-[30em] h-[27rem] shadow-black shadow-lg bg-zinc-900 rounded-md relative">
       <div className="w-full h-[80%] flex justify-center items-center py-2 ">
         <video
           className="w-full h-full"

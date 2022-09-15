@@ -61,6 +61,10 @@ const VideoUpload = () => {
     }
   };
 
+  const onRecorder = () => {
+    router.push("/videos/recorder");
+  };
+
   useEffect(() => {
     if (data?.ok) {
       router.push("/");
@@ -77,6 +81,17 @@ const VideoUpload = () => {
     <Layout uploadPage={true}>
       <PageTitle title="Upload" />
       <div>
+        <div className="mb-6">
+          <div className="w-[50%] m-auto">
+            <span
+              onClick={onRecorder}
+              className="bg-orange-500 uppercase px-2 py-1 font-bold rounded-md hover:bg-orange-600 transition-all cursor-pointer"
+            >
+              Recorder
+            </span>
+          </div>
+        </div>
+
         <form
           encType="multipart/form-data"
           onSubmit={handleSubmit(onValid)}
@@ -97,7 +112,6 @@ const VideoUpload = () => {
               />
             </label>
           </div>
-
           <div className="w-[50%] m-auto mt-16 space-y-8">
             {errorMessage && <ErrorMessage error={errorMessage} />}
             <Input
