@@ -6,8 +6,10 @@ const { createFFmpeg, fetchFile } = require("@ffmpeg/ffmpeg");
 import { FaVideo } from "react-icons/fa";
 import { FaVideoSlash } from "react-icons/fa";
 import { useRef, useState } from "react";
+import { useRouter } from "next/router";
 
 const Recorder: NextPage = () => {
+  const router = useRouter();
   const [preview, setPreview] = useState(false);
   const [startRecord, setStartRecord] = useState(false);
   const [streamObj, setStreamObj] = useState<MediaStream>();
@@ -87,6 +89,9 @@ const Recorder: NextPage = () => {
       setIsCompile(false);
     } catch (error) {
       console.log(error);
+      if (error) {
+        window.confirm("Please reload window");
+      }
     }
   };
 

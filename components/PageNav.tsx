@@ -7,7 +7,7 @@ import { FaThList } from "react-icons/fa";
 
 interface PageNavProps {
   children: React.ReactNode;
-  title: string;
+  title?: string;
 }
 
 const pageNavItem = ["profile", "edit", "home"];
@@ -76,7 +76,7 @@ const PageNav: React.FC<PageNavProps> = ({ title, children }) => {
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className="absolute bg-gray-700 w-36 h-40 rounded-xl right-0 left-0 m-auto top-6 space-y-2 flex flex-col justify-center items-center origin-top-right"
+                className="z-30 absolute bg-gray-700 w-36 h-40 rounded-xl right-0 left-0 m-auto top-6 space-y-2 flex flex-col justify-center items-center origin-top-right"
               >
                 {pageNavItem.map((nav) => (
                   <div
@@ -97,7 +97,10 @@ const PageNav: React.FC<PageNavProps> = ({ title, children }) => {
         </div>
       </nav>
 
-      <main onClick={() => setShowingNav(false)} className="pt-24 min-h-screen">
+      <main
+        onClick={() => setShowingNav(false)}
+        className="pt-14 min-h-screen mb-6"
+      >
         {children}
       </main>
     </section>

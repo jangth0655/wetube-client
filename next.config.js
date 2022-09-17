@@ -5,7 +5,7 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: "/videos/:path*",
+        source: "/videos/recorder",
         headers: [
           {
             key: "Cross-Origin-Embedder-Policy",

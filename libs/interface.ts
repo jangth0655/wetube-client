@@ -2,7 +2,7 @@ export interface User {
   _id: string;
   email: string;
   username: string;
-  passwor: string;
+  password: string;
   name: string;
   location: string;
   avatarId: string;
@@ -11,7 +11,7 @@ export interface User {
 }
 
 export interface Comment {
-  id: string;
+  _id: string;
   text: string;
   createdAt: Date;
 }
@@ -27,4 +27,5 @@ export interface Video {
     views: number;
     rating: number;
   };
+  comments: Comment[];
 }
