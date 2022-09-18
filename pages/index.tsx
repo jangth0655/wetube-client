@@ -23,11 +23,13 @@ const Home: NextPage = () => {
 
   return (
     <Layout>
-      {videoData?.videos.map((video) => (
-        <div key={video._id} className="grid sm:grid-cols-3 grid-cols-2 gap-4">
-          <VideoList video={video} user={video.user} />
-        </div>
-      ))}
+      <div className="grid  sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {videoData?.videos.map((video) => (
+          <div key={video._id}>
+            <VideoList video={video} user={video.user} />
+          </div>
+        ))}
+      </div>
     </Layout>
   );
 };

@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  images: {
+    domains: ["wetube-upload.s3.ap-northeast-2.amazonaws.com"],
+  },
   async headers() {
     return [
       {

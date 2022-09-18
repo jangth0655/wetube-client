@@ -16,10 +16,10 @@ const VideoList: React.FC<VideoListProps> = ({ video, user }) => {
   };
   return (
     <section>
-      <div className="shadow-black shadow-md">
+      <div className="shadow-black shadow-md w-[70%] sm:w-full m-auto">
         <div
           onClick={() => videoDetail(video._id)}
-          className="bg-black p-2 cursor-pointer rounded-t-md"
+          className="bg-black p-2 cursor-pointer rounded-t-md]"
         >
           <video className="w-full h-48" src={video.url}></video>
         </div>

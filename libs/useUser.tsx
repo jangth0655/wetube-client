@@ -2,11 +2,15 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import useSWR from "swr";
 import BASE_URL from "../server";
-import { User } from "./interface";
+import { User, Video } from "./interface";
+
+interface UserWithVideo extends User {
+  videos: Video[];
+}
 
 interface IUser {
   ok: boolean;
-  user: User;
+  user: UserWithVideo;
 }
 
 interface UserProps {

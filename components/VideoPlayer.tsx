@@ -12,6 +12,7 @@ import { FaVolumeMute } from "react-icons/fa";
 import { FaVolumeUp } from "react-icons/fa";
 import { MdFullscreenExit } from "react-icons/md";
 import { User, Video } from "../libs/interface";
+import useUser from "../libs/useUser";
 
 interface VideoWithUser extends Video {
   user: User;
@@ -30,6 +31,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
   const [volumeValue, setVolumeValue] = useState(defaultVolume);
   const [completeTime, setCompleteItem] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const { user } = useUser({ isPrivate: false });
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -99,11 +101,24 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
     router.push(`/users/${userId}`);
   };
 
+  const confirmVideoUser = video?.user._id === user?._id;
+
   return (
     <div>
-      {video?.user && (
+      {confirmVideoUser && (
         <div className="mb-4 flex justify-end items-center px-2">
-          <Link href="/videos/editVideo">
+          <Link
+            href={{
+              pathname: "/videos/editVideo",
+              query: {
+                videoFile: video?.url,
+                videoTitle: video?.title,
+                videoHashTags: video?.hashtags,
+                videoId: video?._id,
+              },
+            }}
+            as="/videos/editVideo"
+          >
             <a className="rounded-lg bg-rose-400 hover:bg-rose-500 transition-all px-2 py-1 cursor-pointer shadow-black shadow-md">
               Edit
             </a>

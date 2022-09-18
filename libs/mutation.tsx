@@ -29,7 +29,8 @@ const useMutation = <T = any,>(url: string): MutationResponse<T> => {
           withCredentials: true,
         })
       ).data;
-      if (!response) {
+
+      if (response.error) {
         setValue((prev) => ({
           ...prev,
           error: response.error || "mutation Error",

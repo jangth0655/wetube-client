@@ -29,7 +29,10 @@ const Login: NextPage = () => {
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<LoginForm>();
+    clearErrors,
+  } = useForm<LoginForm>({
+    mode: "onChange",
+  });
   const [login, { data, loading, error }] = useMutation<LoginMutation>("login");
 
   const router = useRouter();
@@ -55,7 +58,10 @@ const Login: NextPage = () => {
     }
   }, [error, setError]);
 
-  const errorMessage = errors.username?.message || errors.password?.message;
+  const errorMessage =
+    errors.username?.message ||
+    errors.password?.message ||
+    errors.error?.message;
 
   return (
     <section className="min-h-screen flex">
@@ -81,6 +87,7 @@ const Login: NextPage = () => {
             <EnterInput
               register={register("username", {
                 required: "Username is required.",
+                onChange: () => clearErrors("error"),
               })}
               type="text"
               id="username"
@@ -89,6 +96,7 @@ const Login: NextPage = () => {
             <EnterInput
               register={register("password", {
                 required: "Password is required",
+                onChange: () => clearErrors("error"),
               })}
               type="password"
               id="password"

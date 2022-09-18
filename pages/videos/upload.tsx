@@ -11,7 +11,7 @@ import ErrorMessage from "../../components/shared/ErrorMessage";
 import useMutation from "../../libs/mutation";
 import axios from "axios";
 import BASE_URL from "../../server";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 interface UploadForm {
@@ -36,6 +36,8 @@ const VideoUpload = () => {
     setError,
     watch,
   } = useForm<UploadForm>();
+  const [isOnVideoFile, setIsOnVideoFile] = useState(false);
+  const [videoFileName, setVideoFileName] = useState("");
 
   const [upload, { data, loading }] =
     useMutation<UploadMutation>("videos/upload");
@@ -71,6 +73,15 @@ const VideoUpload = () => {
     }
   }, [data, router]);
 
+  const videoFile = watch("file");
+  useEffect(() => {
+    if (videoFile) {
+      const videoName = videoFile[0].name;
+      setIsOnVideoFile(true);
+      setVideoFileName(videoName);
+    }
+  }, [videoFile, videoFileName]);
+
   const errorMessage =
     errors.title?.message ||
     errors.description?.message ||
@@ -102,7 +113,7 @@ const VideoUpload = () => {
               <FaCloudUploadAlt />
             </div>
             <label className="flex justify-center items-center p-4 rounded-lg group-hover:bg-orange-500 group-hover:text-zinc-50 bg-orange-200 text-zinc-700 cursor-pointer transition-all">
-              <span>Upload Video File</span>
+              <span>{isOnVideoFile ? videoFileName : "Upload Video File"}</span>
               <input
                 {...register("file", { required: "Video is required" })}
                 name="file"

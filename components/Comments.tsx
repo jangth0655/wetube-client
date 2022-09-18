@@ -8,8 +8,6 @@ import ShareButton from "./shared/shareButton";
 import useMutation from "../libs/mutation";
 import { useForm } from "react-hook-form";
 import ErrorMessage from "./shared/ErrorMessage";
-import useSWR from "swr";
-import BASE_URL from "../server";
 
 interface CommentWithUser extends Comment {
   user: User;
@@ -27,11 +25,6 @@ interface CommentForm {
 
 interface CommentMutation {
   ok: boolean;
-}
-
-interface CommentResponse {
-  ok: boolean;
-  comments: CommentWithUser[];
 }
 
 const Comments: React.FC<CommentsProps> = ({ comments, id }) => {

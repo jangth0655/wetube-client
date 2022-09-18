@@ -146,11 +146,22 @@ const Layout: React.FC<LayoutProps> = ({ children, uploadPage }) => {
 
         <div className="flex items-center space-x-5 relative">
           <Search />
-          <div
-            onClick={showProfileNav}
-            className="bg-zinc-200 rounded-full w-8 h-8 flex justify-center items-center text-zinc-600 cursor-pointer"
-          >
-            <FaUser />
+          <div onClick={showProfileNav}>
+            {user?.avatarId ? (
+              <div className="rounded-full w-8 h-8 relative cursor-pointer">
+                <Image
+                  className="rounded-full "
+                  src={user.avatarId}
+                  layout="fill"
+                  objectFit="cover"
+                  alt=""
+                />
+              </div>
+            ) : (
+              <div className="bg-zinc-200 rounded-full w-8 h-8 flex justify-center items-center text-zinc-600 cursor-pointer">
+                <FaUser />
+              </div>
+            )}
           </div>
           <AnimatePresence>
             {profileNav ? (
