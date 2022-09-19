@@ -9,7 +9,6 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 
 const Recorder: NextPage = () => {
-  const router = useRouter();
   const [preview, setPreview] = useState(false);
   const [startRecord, setStartRecord] = useState(false);
   const [streamObj, setStreamObj] = useState<MediaStream>();
@@ -116,7 +115,7 @@ const Recorder: NextPage = () => {
             onClick={onRecordingReq}
             className="bg-orange-500 hover:bg-orange-600 transition-all rounded-lg px-2 py-1 text-sm cursor-pointer text-zinc-50"
           >
-            Preview
+            Start
           </span>
 
           <div className="p-2 bg-orange-500 hover:bg-orange-600 transition-all rounded-full cursor-pointer text-zinc-50">

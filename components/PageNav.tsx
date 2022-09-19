@@ -62,7 +62,9 @@ const PageNav: React.FC<PageNavProps> = ({ title, children }) => {
           <FaAngleLeft />
         </div>
         <div className="flex justify-center items-center w-[33%]">
-          <span className="font-bold text-xl">{title}</span>
+          <span className="font-bold text-xl dark:text-zinc-50 text-zinc-800">
+            {title}
+          </span>
         </div>
         <div
           onClick={onShowNav}

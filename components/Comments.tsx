@@ -1,9 +1,10 @@
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { Comment, User } from "../libs/interface";
 import Input from "./shared/Input";
 
 import { FaUser } from "react-icons/fa";
+import { FaWindowClose } from "react-icons/fa";
 import ShareButton from "./shared/shareButton";
 import useMutation from "../libs/mutation";
 import { useForm } from "react-hook-form";
@@ -27,6 +28,10 @@ interface CommentMutation {
   ok: boolean;
 }
 
+interface DeleteCommentMutation {
+  ok: boolean;
+}
+
 const Comments: React.FC<CommentsProps> = ({ comments, id }) => {
   const {
     register,
@@ -35,9 +40,24 @@ const Comments: React.FC<CommentsProps> = ({ comments, id }) => {
     setError,
     reset,
   } = useForm<CommentForm>();
+  const [commentId, setCommentId] = useState("");
 
   const [createComment, { data, error, loading }] =
     useMutation<CommentMutation>(`videos/${id}/comment`);
+
+  const [
+    deleteComment,
+    { data: deleteCommentData, loading: deleteCommentLoading },
+  ] = useMutation<DeleteCommentMutation>(
+    `videos/${id}/delete-comment?commentId=${commentId}`
+  );
+
+  const onDelete = (id: string) => {
+    if (deleteCommentLoading) return;
+    if (!id) return;
+    setCommentId(id);
+    if (commentId) deleteComment({});
+  };
 
   const onValid = (data: CommentForm) => {
     if (loading) return;
@@ -70,32 +90,48 @@ const Comments: React.FC<CommentsProps> = ({ comments, id }) => {
 
       <div>
         {comments?.map((comment) => (
-          <div className="mb-10 flex items-center space-x-3" key={comment._id}>
+          <div
+            className="mb-10 flex items-center space-x-3 justify-between"
+            key={comment._id}
+          >
             <div className="flex items-center space-x-2">
-              {comment?.user?.avatarId ? (
-                <div className="relative w-10 h-10 rounded-full">
-                  <Image
-                    src={comment.user.avatarId}
-                    layout="fill"
-                    objectFit="cover"
-                    alt=""
-                  />
+              <div>
+                {comment?.user?.avatarId ? (
+                  <div className="relative w-10 h-10 rounded-full">
+                    <Image
+                      src={comment.user.avatarId}
+                      layout="fill"
+                      objectFit="cover"
+                      alt=""
+                    />
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-zinc-500 flex justify-center items-center">
+                    <FaUser />
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <div>
+                  <span className="font-bold">{comment?.user?.username}</span>
                 </div>
-              ) : (
-                <div className="w-10 h-10 rounded-full bg-zinc-500 flex justify-center items-center">
-                  <FaUser />
+                <div>
+                  <span>{comment?.text}</span>
                 </div>
-              )}
+              </div>
             </div>
 
-            <div className="space-y-2">
+            {comment.user && (
               <div>
-                <span className="font-bold">{comment?.user?.username}</span>
+                <span
+                  onClick={() => onDelete(comment._id)}
+                  className=" text-rose-400 hover:text-rose-500 transition-all cursor-pointer"
+                >
+                  <FaWindowClose />
+                </span>
               </div>
-              <div>
-                <span>{comment?.text}</span>
-              </div>
-            </div>
+            )}
           </div>
         ))}
       </div>
