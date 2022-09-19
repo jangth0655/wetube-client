@@ -71,12 +71,11 @@ const UserProfile: React.FC<UserProfileProps> = () => {
               className="w-full h-72 shadow-black shadow-md cursor-pointer"
               key={video._id}
             >
-              <video
-                className="w-full h-[85%]  p-2 bg-black"
-                src={video.url}
-              ></video>
-              <div className="h-[15%] bg-zinc-900 p-2">
-                <span className="font-bold">{video.title}</span>
+              <video className="w-full h-[85%] p-2" src={video.url}></video>
+              <div className="h-[15%] p-2">
+                <span className="font-bold dark:text-zinc-100">
+                  {video.title}
+                </span>
               </div>
             </div>
           ))}

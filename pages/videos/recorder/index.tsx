@@ -114,22 +114,27 @@ const Recorder: NextPage = () => {
         <div className="h-[10%] flex justify-evenly items-center bg-zinc-900">
           <span
             onClick={onRecordingReq}
-            className="bg-orange-500 hover:bg-orange-600 transition-all rounded-lg px-2 py-1 text-sm cursor-pointer"
+            className="bg-orange-500 hover:bg-orange-600 transition-all rounded-lg px-2 py-1 text-sm cursor-pointer text-zinc-50"
           >
             Preview
           </span>
 
-          <div className="p-2 bg-orange-500 hover:bg-orange-600 transition-all rounded-full cursor-pointer">
+          <div className="p-2 bg-orange-500 hover:bg-orange-600 transition-all rounded-full cursor-pointer text-zinc-50">
             {startRecord ? (
               <FaVideoSlash onClick={onStopVideoStream} />
             ) : (
               <FaVideo onClick={onStartRecording} />
             )}
           </div>
-          {isCompile && "Loading..."}
+          {isCompile && <span className="text-zinc-50">loading...</span>}
           {isDownLoad && (
             <div className="p-1 text-sm bg-orange-500 hover:bg-orange-600 transition-all rounded-lg cursor-pointer">
-              <a ref={anchorRef} onClick={onDownLoadRecodingFile} download>
+              <a
+                className="text-zinc-50"
+                ref={anchorRef}
+                onClick={onDownLoadRecodingFile}
+                download
+              >
                 Start Download
               </a>
             </div>

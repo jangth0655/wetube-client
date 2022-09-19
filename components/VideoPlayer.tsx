@@ -119,7 +119,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
             }}
             as="/videos/editVideo"
           >
-            <a className="rounded-lg bg-rose-400 hover:bg-rose-500 transition-all px-2 py-1 cursor-pointer shadow-black shadow-md">
+            <a className="rounded-lg bg-orange-400 hover:bg-orange-500 transition-all px-2 py-1 cursor-pointer shadow-black shadow-md text-zinc-100">
               Edit
             </a>
           </Link>

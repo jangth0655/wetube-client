@@ -53,7 +53,7 @@ const PageNav: React.FC<PageNavProps> = ({ title, children }) => {
   };
 
   return (
-    <section className="dark:text-zinc-50 text-zinc-700  max-w-3xl m-auto">
+    <section className="dark:text-zinc-50 max-w-3xl m-auto">
       <nav className="relative flex items-center p-3 pt-10 justify-between ">
         <div
           onClick={onBack}
@@ -76,7 +76,7 @@ const PageNav: React.FC<PageNavProps> = ({ title, children }) => {
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className="z-30 absolute bg-gray-700 w-36 h-40 rounded-xl right-0 left-0 m-auto top-6 space-y-2 flex flex-col justify-center items-center origin-top-right"
+                className="z-30 absolute dark:bg-gray-700 bg-zinc-100 w-36 h-40 rounded-xl right-0 left-0 m-auto top-6 space-y-2 flex flex-col justify-center items-center origin-top-right shadow-black shadow-sm"
               >
                 {pageNavItem.map((nav) => (
                   <div
@@ -85,7 +85,7 @@ const PageNav: React.FC<PageNavProps> = ({ title, children }) => {
                   >
                     <span
                       onClick={() => onGoPage(nav)}
-                      className="uppercase font-bold hover:text-teal-400 transition-all w-full flex justify-center items-center"
+                      className="uppercase font-bold hover:text-teal-600 dark:hover:text-teal-400 transition-all w-full flex justify-center items-center"
                     >
                       {nav}
                     </span>

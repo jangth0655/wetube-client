@@ -124,7 +124,9 @@ const Layout: React.FC<LayoutProps> = ({ children, uploadPage }) => {
       >
         <div
           className={cls(
-            getScrollY > 150 ? "blur-md bg-black opacity-80" : "",
+            getScrollY > 150
+              ? " dark:bg-zinc-900 bg-white shadow-lg shadow-black"
+              : "",
             "absolute w-full h-full left-0 right-0"
           )}
         />
@@ -140,7 +142,7 @@ const Layout: React.FC<LayoutProps> = ({ children, uploadPage }) => {
           </div>
           <div className="uppercase font-bold z-50">
             <span className="text-rose-500">we</span>
-            <span>tube</span>
+            <span className="dark:text-white text-zinc-900">tube</span>
           </div>
         </div>
 
@@ -170,19 +172,19 @@ const Layout: React.FC<LayoutProps> = ({ children, uploadPage }) => {
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className="absolute top-8 w-20 h-20 right-6 rounded-3xl bg-gray-700 rounded-tr-none origin-top"
+                className="absolute top-8 w-20 h-20 right-6 rounded-3xl dark:bg-gray-700 rounded-tr-none origin-top bg-zinc-100 text-zinc-800 shadow-black shadow-sm dark:text-zinc-50"
               >
                 <div className="py-4 px-2 w-full h-full space-y-2 flex justify-center flex-col text-center cursor-pointer">
                   <span
                     onClick={() => onProfile(user?._id)}
-                    className="block hover:text-teal-400 transition-all"
+                    className="block hover:text-teal-600 dark:hover:text-teal-400 transition-all"
                   >
                     Profile
                   </span>
                   {user ? (
                     <span
                       onClick={() => onLoginPage("logout")}
-                      className="block hover:text-teal-400 transition-all"
+                      className="block hover:text-teal-600 dark:hover:text-teal-400transition-all"
                     >
                       Log Out
                     </span>

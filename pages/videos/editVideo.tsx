@@ -117,7 +117,7 @@ const EditVideo: NextPage = () => {
                 register={register("description")}
               />
             </div>
-            <div className="flex justify-center items-center py-1 rounded-md hover:bg-red-500 bg-rose-400 transition-all cursor-pointer">
+            <div className="flex justify-center items-center py-1 rounded-md hover:bg-orange-500 bg-orange-400 transition-all cursor-pointer">
               <ShareButton text="Edit" loading={loading} />
             </div>
           </div>

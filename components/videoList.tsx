@@ -14,33 +14,45 @@ const VideoList: React.FC<VideoListProps> = ({ video, user }) => {
   const videoDetail = (videoId: string) => {
     router.push(`/videos/${videoId}`);
   };
+
+  const onProfile = (userId: string) => {
+    router.push(`users/${userId}`);
+  };
   return (
     <section>
-      <div className="shadow-black shadow-md w-[70%] sm:w-full m-auto">
+      <div className="shadow-xl w-[70%] sm:w-full m-auto">
         <div
           onClick={() => videoDetail(video._id)}
-          className="bg-black p-2 cursor-pointer rounded-t-md]"
+          className="p-2 cursor-pointer"
         >
-          <video className="w-full h-48" src={video.url}></video>
+          <video className="w-full h-full" src={video.url}></video>
         </div>
 
-        <div className="flex items-center px-4 py-2 space-x-4 bg-zinc-900">
-          <div className="relative w-10 h-10 cursor-pointer">
-            {user?.avatarId ? (
-              <Image
-                src={user.avatarId}
-                layout="fill"
-                objectFit="cover"
-                alt=""
-              />
-            ) : (
-              <div className="w-10 h-10 bg-zinc-400 rounded-full flex justify-center items-center">
-                <FaUser />
-              </div>
-            )}
+        <div className="flex items-center justify-between px-4 py-2 rounded-b-md">
+          <div
+            onClick={() => onProfile(user._id)}
+            className="flex items-center space-x-2 cursor-pointer"
+          >
+            <div className="relative w-8 h-8">
+              {user?.avatarId ? (
+                <Image
+                  src={user.avatarId}
+                  layout="fill"
+                  objectFit="cover"
+                  alt=""
+                />
+              ) : (
+                <div className="w-8 h-8 bg-zinc-400 rounded-full flex justify-center items-center">
+                  <FaUser />
+                </div>
+              )}
+            </div>
+            <div>
+              <span className="text-sm">{user.username}</span>
+            </div>
           </div>
           <div>
-            <span>{user.username}</span>
+            <span className="font-bold">{video.title}</span>
           </div>
         </div>
       </div>

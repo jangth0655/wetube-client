@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import { useRouter } from "next/router";
 import useSWR from "swr";
 import Layout from "../components/layout";
 import { User, Video } from "../libs/interface";
@@ -23,7 +22,7 @@ const Home: NextPage = () => {
 
   return (
     <Layout>
-      <div className="grid  sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid  sm:grid-cols-2 md:grid-cols-3 gap-6 space-y-20 sm:space-y-0">
         {videoData?.videos.map((video) => (
           <div key={video._id}>
             <VideoList video={video} user={video.user} />

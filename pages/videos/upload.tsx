@@ -35,7 +35,10 @@ const VideoUpload = () => {
     formState: { errors },
     setError,
     watch,
-  } = useForm<UploadForm>();
+    clearErrors,
+  } = useForm<UploadForm>({
+    mode: "onChange",
+  });
   const [isOnVideoFile, setIsOnVideoFile] = useState(false);
   const [videoFileName, setVideoFileName] = useState("");
 
@@ -47,17 +50,23 @@ const VideoUpload = () => {
     if (data.file && data.file.length > 0) {
       const formData = new FormData();
       formData.append("file", data.file[0], `${user?.username}_${data.title}`);
-      const videoData = await (
-        await axios(`${BASE_URL}/videos/awsUpload`, {
-          method: "POST",
-          data: formData,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        })
-      ).data;
-      upload({ ...data, file: videoData.file.location });
+      try {
+        const videoData = await (
+          await axios(`${BASE_URL}/videos/awsUpload`, {
+            method: "POST",
+            data: formData,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          })
+        ).data;
+        console.log();
+        setError("error", { message: videoData.error });
+        upload({ ...data, file: videoData.file.location });
+      } catch (error: any) {
+        console.log(error);
+      }
     } else {
       setError("file", { message: "Video is Required." });
     }
@@ -76,7 +85,9 @@ const VideoUpload = () => {
   const videoFile = watch("file");
   useEffect(() => {
     if (videoFile) {
-      const videoName = videoFile[0].name;
+      const videoName = videoFile[0]?.name
+        ? videoFile[0].name
+        : "Upload video.";
       setIsOnVideoFile(true);
       setVideoFileName(videoName);
     }
@@ -86,7 +97,8 @@ const VideoUpload = () => {
     errors.title?.message ||
     errors.description?.message ||
     errors.file?.message ||
-    errors.hashtags?.message;
+    errors.hashtags?.message ||
+    errors.error?.message;
 
   return (
     <Layout uploadPage={true}>
@@ -96,7 +108,7 @@ const VideoUpload = () => {
           <div className="w-[50%] m-auto">
             <span
               onClick={onRecorder}
-              className="bg-orange-500 uppercase px-2 py-1 font-bold rounded-md hover:bg-orange-600 transition-all cursor-pointer"
+              className="bg-orange-500 uppercase px-2 py-1 font-bold rounded-md hover:bg-orange-600 transition-all cursor-pointer text-zinc-50"
             >
               Recorder
             </span>
@@ -115,7 +127,10 @@ const VideoUpload = () => {
             <label className="flex justify-center items-center p-4 rounded-lg group-hover:bg-orange-500 group-hover:text-zinc-50 bg-orange-200 text-zinc-700 cursor-pointer transition-all">
               <span>{isOnVideoFile ? videoFileName : "Upload Video File"}</span>
               <input
-                {...register("file", { required: "Video is required" })}
+                {...register("file", {
+                  required: "Video is required",
+                  onChange: () => clearErrors("error"),
+                })}
                 name="file"
                 className="hidden"
                 type="file"
