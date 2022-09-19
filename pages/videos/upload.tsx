@@ -61,7 +61,6 @@ const VideoUpload = () => {
             withCredentials: true,
           })
         ).data;
-        console.log();
         setError("error", { message: videoData.error });
         upload({ ...data, file: videoData.file.location });
       } catch (error: any) {

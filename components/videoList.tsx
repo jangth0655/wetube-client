@@ -3,6 +3,7 @@ import { User, Video } from "../libs/interface";
 
 import { FaUser } from "react-icons/fa";
 import { useRouter } from "next/router";
+import { dateFormate } from "../libs/dateFormat";
 
 interface VideoListProps {
   video: Video;
@@ -28,31 +29,44 @@ const VideoList: React.FC<VideoListProps> = ({ video, user }) => {
           <video className="w-full h-full" src={video.url}></video>
         </div>
 
-        <div className="flex items-center justify-between px-4 py-2 rounded-b-md">
-          <div
-            onClick={() => onProfile(user._id)}
-            className="flex items-center space-x-2 cursor-pointer"
-          >
-            <div className="relative w-8 h-8">
-              {user?.avatarId ? (
-                <Image
-                  src={user.avatarId}
-                  layout="fill"
-                  objectFit="cover"
-                  alt=""
-                />
-              ) : (
-                <div className="w-8 h-8 bg-zinc-400 rounded-full flex justify-center items-center">
-                  <FaUser />
-                </div>
-              )}
+        <div className="px-4 py-2 rounded-b-md">
+          <div className="flex items-center justify-between">
+            <div
+              onClick={() => onProfile(user._id)}
+              className="flex items-center space-x-2 cursor-pointer"
+            >
+              <div className="relative w-8 h-8">
+                {user?.avatarId ? (
+                  <Image
+                    src={user.avatarId}
+                    layout="fill"
+                    objectFit="cover"
+                    alt=""
+                  />
+                ) : (
+                  <div className="w-8 h-8 bg-zinc-400 rounded-full flex justify-center items-center">
+                    <FaUser />
+                  </div>
+                )}
+              </div>
+              <div>
+                <span className="text-sm">{user.username}</span>
+              </div>
             </div>
             <div>
-              <span className="text-sm">{user.username}</span>
+              <span className="font-bold">{video.title}</span>
             </div>
           </div>
-          <div>
-            <span className="font-bold">{video.title}</span>
+
+          <div className="flex items-center space-x-3 mt-2">
+            <div className="space-x-2 text-rose-400">
+              <span className="text-xs">조회수</span>
+              <span className="text-xs">{video.meta.view}</span>
+            </div>
+            <span>·</span>
+            <div>
+              <span className="text-xs">{dateFormate(video.createAt)}</span>
+            </div>
           </div>
         </div>
       </div>

@@ -24,8 +24,7 @@ export interface Video {
   createAt: Date;
   hashtags: string;
   meta: {
-    views: number;
-    rating: number;
+    view: number;
   };
   comments: Comment[];
 }

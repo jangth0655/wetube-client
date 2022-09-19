@@ -6,6 +6,7 @@ import { FaRegEdit } from "react-icons/fa";
 import PageNav from "../../../components/PageNav";
 import Image from "next/image";
 import { useEffect } from "react";
+import { dateFormate } from "../../../libs/dateFormat";
 
 interface UserProfileProps {}
 

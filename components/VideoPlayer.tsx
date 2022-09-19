@@ -11,6 +11,7 @@ import { FaStop } from "react-icons/fa";
 import { FaVolumeMute } from "react-icons/fa";
 import { FaVolumeUp } from "react-icons/fa";
 import { MdFullscreenExit } from "react-icons/md";
+import { dateFormate } from "../libs/dateFormat";
 import { User, Video } from "../libs/interface";
 import useUser from "../libs/useUser";
 
@@ -20,11 +21,12 @@ interface VideoWithUser extends Video {
 
 interface VideoPlayerProps {
   video?: VideoWithUser;
+  view?: number;
 }
 
 let defaultVolume = 0.5;
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ video, view }) => {
   const router = useRouter();
   const [isPlaying, setIsPlaying] = useState(true);
   const [mute, setMute] = useState(false);
@@ -212,7 +214,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ video }) => {
             )}
             <span>{video?.user.username}</span>
           </div>
-          <div></div>
+          <div className="space-x-3 flex items-center">
+            <div className="space-x-2">
+              <span className="text-sm font-bold">조회수</span>
+              <span className="text-sm">{`${video?.meta.view} ·`}</span>
+            </div>
+            <span className="text-sm">{dateFormate(video?.createAt)}</span>
+          </div>
         </div>
 
         <div className="space-y-4">

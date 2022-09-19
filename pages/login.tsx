@@ -104,7 +104,7 @@ const Login: NextPage = () => {
             />
           </div>
           <div className="p-2 rounded-lg bg-zinc-800 text-zinc-50 text-center hover:bg-zinc-700 cursor-pointer transition-all">
-            <ShareButton social={false} text="Continue" loading={loading} />
+            <ShareButton social={false} text="Login" loading={loading} />
           </div>
         </form>
         <div onClick={onSignUp} className="text-center mt-10">
