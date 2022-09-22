@@ -51,13 +51,15 @@ const VideoList: React.FC<VideoListProps> = ({ video, user }) => {
               onClick={() => onProfile(user._id)}
               className="flex items-center space-x-2 cursor-pointer"
             >
-              <div className="relative w-8 h-8">
+              <div className="relative w-8 h-8 rounded-full">
                 {user?.avatarId ? (
                   <Image
+                    className="rounded-full"
                     src={user.avatarId}
                     layout="fill"
                     objectFit="cover"
                     alt=""
+                    priority
                   />
                 ) : (
                   <div className="w-8 h-8 bg-zinc-400 rounded-full flex justify-center items-center">

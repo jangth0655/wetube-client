@@ -49,7 +49,10 @@ const EditPassword = () => {
     if (data && data.ok) {
       router.push("/");
     }
-  }, [data, router]);
+    if (error) {
+      setError("error", { message: error });
+    }
+  }, [data, router, error, setError]);
 
   return (
     <PageNav title="Change Password">
