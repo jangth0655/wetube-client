@@ -3,7 +3,7 @@
 <div align="center">
     <br />
     <div>
-      <img style="border-radius:10px" height="70" src="./assets/wetube-logo.png" />
+      <img style="border-radius:10px" height="70" src="./public/image/logo/wetube-logo.png" />
     </div>
     <a display="block" href="https://wetube-client.vercel.app/" >
       https://wetube-client.vercel.app/
@@ -53,6 +53,8 @@
 ## Project
 
 - 영상을 업로드 하거나 웹캠으로 녹화하여 업로드할 수 있는 애플리케이션으로, 서로 다른 사람들끼리 영상을 공유하고 의견을 나눌 수 있는 애플리케이션입니다.
+
+<br />
 
 > 회원가입, 로그인, 로그아웃
 
