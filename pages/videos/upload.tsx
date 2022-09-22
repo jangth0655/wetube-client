@@ -9,16 +9,19 @@ import ShareButton from "../../components/shared/shareButton";
 import { useForm } from "react-hook-form";
 import ErrorMessage from "../../components/shared/ErrorMessage";
 import useMutation from "../../libs/mutation";
-import axios from "axios";
-import BASE_URL from "../../server";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import uploadFileProcess from "../../libs/uploadFIleProcess";
+import Image from "next/image";
+import cls from "../../libs/cls";
 
 interface UploadForm {
   title: string;
   hashtags: string;
   description: string;
   file: FileList;
+  thumbnailURL: FileList;
   error?: string;
 }
 
@@ -41,34 +44,41 @@ const VideoUpload = () => {
   });
   const [isOnVideoFile, setIsOnVideoFile] = useState(false);
   const [videoFileName, setVideoFileName] = useState("");
+  const [previewThumbnail, setPreviewThumbnail] = useState("");
 
   const [upload, { data, loading }] =
     useMutation<UploadMutation>("videos/upload");
 
   const onValid = async (data: UploadForm) => {
     if (loading) return;
+
+    let uploadFile;
+    let thumbnail;
     if (data.file && data.file.length > 0) {
-      const formData = new FormData();
-      formData.append("file", data.file[0], `${user?.username}_${data.title}`);
-      try {
-        const videoData = await (
-          await axios(`${BASE_URL}/videos/awsUpload`, {
-            method: "POST",
-            data: formData,
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          })
-        ).data;
-        setError("error", { message: videoData.error });
-        upload({ ...data, file: videoData.file.location });
-      } catch (error: any) {
-        console.log(error);
+      uploadFile = await uploadFileProcess(
+        data.file,
+        `${user?.username}_${data.title}`,
+        "videos"
+      );
+      if (uploadFile.error) {
+        setError("error", { message: uploadFile.error });
+        return;
+      }
+    }
+    if (data.thumbnailURL && data.thumbnailURL.length > 0) {
+      thumbnail = await uploadFileProcess(
+        data.thumbnailURL,
+        `${user?.username}_${data.title}_Thumbnail`,
+        "videos"
+      );
+      if (thumbnail.error) {
+        setError("error", { message: thumbnail.error });
+        return;
       }
     } else {
       setError("file", { message: "Video is Required." });
     }
+    upload({ ...data, file: uploadFile?.file, thumbnailURL: thumbnail?.file });
   };
 
   const onRecorder = () => {
@@ -84,13 +94,23 @@ const VideoUpload = () => {
   const videoFile = watch("file");
   useEffect(() => {
     if (videoFile) {
-      const videoName = videoFile[0]?.name
-        ? videoFile[0].name
-        : "Upload video.";
+      const videoName = videoFile[0]?.name ? videoFile[0].name : "Upload video";
       setIsOnVideoFile(true);
       setVideoFileName(videoName);
     }
   }, [videoFile, videoFileName]);
+
+  const thumbnail = watch("thumbnailURL");
+  useEffect(() => {
+    if (thumbnail && thumbnail.length > 0) {
+      const thumbnailFile = thumbnail[0];
+      setPreviewThumbnail(URL.createObjectURL(thumbnailFile));
+    }
+  }, [thumbnail]);
+
+  const onClearThumbnail = () => {
+    setPreviewThumbnail("");
+  };
 
   const errorMessage =
     errors.title?.message ||
@@ -119,23 +139,59 @@ const VideoUpload = () => {
           onSubmit={handleSubmit(onValid)}
           className="w-full"
         >
-          <div className="border-2 border-zinc-500 dark:border-zinc-50 rounded-md border-dashed w-[50%] h-48 m-auto transition-all flex justify-center items-center group flex-col space-y-2">
-            <div className="text-4xl group-hover:text-orange-500 transition-all opacity-40">
-              <FaCloudUploadAlt />
+          <div className="rounded-md w-[50%] m-auto transition-all flex justify-center items-center group flex-col">
+            <div className="flex flex-col w-full">
+              <label className="flex w-[100%] rounded-xl justify-center items-center p-2  text-zinc-50 cursor-pointer hover:dark:bg-black hover:bg-blue-700 bg-zinc-900 transition-all shadow-black shadow-md mb-10">
+                <span className="font-bold uppercase">
+                  {isOnVideoFile ? videoFileName : "Upload Video"}
+                </span>
+                <input
+                  {...register("file", {
+                    required: "Video is required",
+                    onChange: () => clearErrors("error"),
+                  })}
+                  name="file"
+                  className="hidden"
+                  type="file"
+                  accept="video/*"
+                />
+              </label>
+
+              <label
+                className={cls(
+                  "p-4 rounded-xl flex justify-center items-center relative h-80 hover:border-orange-500 transition-all cursor-pointer hover:text-orange-500 mb-6",
+                  previewThumbnail
+                    ? "shadow-black shadow-md"
+                    : "border-2 border-dashed"
+                )}
+              >
+                {previewThumbnail ? (
+                  <Image
+                    className="rounded-xl"
+                    src={previewThumbnail}
+                    layout="fill"
+                    objectFit="cover"
+                    alt=""
+                  />
+                ) : (
+                  <FaCloudUploadAlt size={60} />
+                )}
+                <input
+                  {...register("thumbnailURL", {
+                    required: "Video is required",
+                    onChange: () => clearErrors("error"),
+                  })}
+                  className="hidden"
+                  type="file"
+                  accept="image/*"
+                />
+              </label>
+              <div onClick={onClearThumbnail}>
+                <span className="inline-block px-2 py-1 bg-orange-400 hover:bg-orange-600 text-zinc-50 transition-all rounded-xl cursor-pointer">
+                  Reset
+                </span>
+              </div>
             </div>
-            <label className="flex justify-center items-center p-4 rounded-lg group-hover:bg-orange-500 group-hover:text-zinc-50 bg-orange-200 text-zinc-700 cursor-pointer transition-all">
-              <span>{isOnVideoFile ? videoFileName : "Upload Video File"}</span>
-              <input
-                {...register("file", {
-                  required: "Video is required",
-                  onChange: () => clearErrors("error"),
-                })}
-                name="file"
-                className="hidden"
-                type="file"
-                accept="video/*"
-              />
-            </label>
           </div>
           <div className="w-[50%] m-auto mt-16 space-y-8">
             {errorMessage && <ErrorMessage error={errorMessage} />}
@@ -158,7 +214,7 @@ const VideoUpload = () => {
               id="description"
               label="Description"
             />
-            <div className="flex justify-center items-center rounded-lg bg-orange-300 p-2 hover:bg-orange-500 transition-all cursor-pointer">
+            <div className="flex justify-center items-center rounded-lg bg-orange-300 p-2 hover:bg-orange-500 transition-all cursor-pointer shadow-black shadow-md">
               <ShareButton text="Submit" loading={loading} />
             </div>
           </div>

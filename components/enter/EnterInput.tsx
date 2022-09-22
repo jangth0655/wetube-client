@@ -16,7 +16,7 @@ const EnterInput: React.FC<EnterInputProps> = ({
   return (
     <div className="w-full flex flex-col space-y-4">
       <input
-        className="p-2 rounded-lg  text-zinc-700 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-400"
+        className="p-2 rounded-lg  text-zinc-700 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-400 shadow-black shadow-md"
         id={id}
         type={type}
         placeholder={placeholder}

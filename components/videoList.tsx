@@ -1,9 +1,11 @@
 import Image from "next/image";
 import { User, Video } from "../libs/interface";
 
-import { FaUser } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { dateFormate } from "../libs/dateFormat";
+
+import { FaUser } from "react-icons/fa";
+import { MdImageNotSupported } from "react-icons/md";
 
 interface VideoListProps {
   video: Video;
@@ -19,14 +21,28 @@ const VideoList: React.FC<VideoListProps> = ({ video, user }) => {
   const onProfile = (userId: string) => {
     router.push(`users/${userId}`);
   };
+
   return (
     <section>
-      <div className="shadow-xl w-[70%] sm:w-full m-auto">
+      <div className="w-[70%] sm:w-full m-auto border-[1px] border-zinc-700 shadow-black shadow-sm rounded-md">
         <div
           onClick={() => videoDetail(video._id)}
-          className="p-2 cursor-pointer"
+          className="p-2 cursor-pointer relative h-56 "
         >
-          <video className="w-full h-full" src={video.url}></video>
+          {video.thumbnailURL ? (
+            <Image
+              className="rounded-t-md"
+              src={video.thumbnailURL}
+              objectFit="cover"
+              layout="fill"
+              alt=""
+            />
+          ) : (
+            <div className="absolute w-full h-full flex justify-center items-center space-x-2">
+              <MdImageNotSupported size={30} />
+              <span className="text-sm">썸네일이 없습니다.</span>
+            </div>
+          )}
         </div>
 
         <div className="px-4 py-2 rounded-b-md">

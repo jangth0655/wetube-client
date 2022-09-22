@@ -22,14 +22,13 @@ const useMutation = <T = any,>(url: string): MutationResponse<T> => {
       const response = await (
         await axios(`${process.env.NEXT_PUBLIC_SERVER!}/${url}`, {
           method: "POST",
-          data,
+          data: JSON.stringify(data),
           headers: {
             "Content-Type": "application/json",
           },
           withCredentials: true,
         })
       ).data;
-
       if (response.error) {
         setValue((prev) => ({
           ...prev,

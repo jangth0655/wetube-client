@@ -7,8 +7,16 @@ import { FaVideo } from "react-icons/fa";
 import { FaVideoSlash } from "react-icons/fa";
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
+
+const files = {
+  input: "recording.webm",
+  output: "output.mp4",
+  thumb: "thumbnail.jpg",
+};
 
 const Recorder: NextPage = () => {
+  const router = useRouter();
   const [preview, setPreview] = useState(false);
   const [startRecord, setStartRecord] = useState(false);
   const [streamObj, setStreamObj] = useState<MediaStream>();
@@ -16,11 +24,12 @@ const Recorder: NextPage = () => {
   const [isDownLoad, setIsDownLoad] = useState(false);
   const [isCompile, setIsCompile] = useState(false);
 
-  const [recodingFile, setRecodingFile] = useState("");
   const [ffCompiledFile, setFFCompiledFile] = useState("");
+  const [ffImageFile, setFFImageFile] = useState("");
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const anchorRef = useRef<HTMLAnchorElement>(null);
+  const videoAnchorRef = useRef<HTMLAnchorElement>(null);
+  const thumbnailAnchorRef = useRef<HTMLAnchorElement>(null);
 
   const onRecordingReq = async () => {
     try {
@@ -58,13 +67,13 @@ const Recorder: NextPage = () => {
       videoRef.current.srcObject = null;
       videoRef.current.src = recordingFileUrl;
       convertMP4file(recordingFileUrl);
-      setRecodingFile(recordingFileUrl);
       videoRef.current.play();
       videoRef.current.loop = true;
     };
   };
 
   const convertMP4file = async (recodingFile: any) => {
+    // nextjs.config & nextjs headers 확인
     if (!recodingFile) return;
     setIsCompile(true);
     const ffmpeg = createFFmpeg({
@@ -74,18 +83,35 @@ const Recorder: NextPage = () => {
 
     try {
       await ffmpeg.load();
-      ffmpeg.FS(
-        "writeFile",
-        "RecodingFile.webm",
-        await fetchFile(recodingFile)
+      ffmpeg.FS("writeFile", files.input, await fetchFile(recodingFile));
+      await ffmpeg.run("-i", files.input, "-r", "60", files.output);
+      await ffmpeg.run(
+        "-i",
+        files.input,
+        "-ss",
+        "00:00:01",
+        "-frames:v",
+        "1",
+        files.thumb
       );
-      await ffmpeg.run("-i", "RecodingFile.webm", "-r", "60", "output.mp4");
-      const mp4File = ffmpeg.FS("readFile", "output.mp4");
+
+      const mp4File = ffmpeg.FS("readFile", files.output);
+      const thumbFile = ffmpeg.FS("readFile", files.thumb);
+
       const mp4Blob = new Blob([mp4File.buffer], { type: "video/mp4" });
+      const thumbBlob = new Blob([thumbFile.buffer], { type: "image/jpg" });
+
+      const thumbURL = URL.createObjectURL(thumbBlob);
       const mp4URL = URL.createObjectURL(mp4Blob);
+
       setFFCompiledFile(mp4URL);
+      setFFImageFile(thumbURL);
       setIsDownLoad(true);
       setIsCompile(false);
+
+      ffmpeg.FS("unlink", files.output);
+      ffmpeg.FS("unlink", files.thumb);
+      ffmpeg.FS("unlink", files.input);
     } catch (error) {
       console.log(error);
       if (error) {
@@ -94,13 +120,20 @@ const Recorder: NextPage = () => {
     }
   };
 
-  const onDownLoadRecodingFile = async () => {
-    // nextjs.config & nextjs headers 확인
-    console.log("download recodingfile", recodingFile);
-    if (!anchorRef.current || !ffCompiledFile) return;
-    console.log("onDownload", ffCompiledFile);
-    anchorRef.current.href = ffCompiledFile;
-    anchorRef.current.download = "recodingFile.mp4";
+  const onDownLoadRecodingFile = () => {
+    if (!videoAnchorRef.current || !ffCompiledFile) return;
+    videoAnchorRef.current.href = ffCompiledFile;
+    videoAnchorRef.current.download = "recodingFile.mp4";
+  };
+
+  const onDownLoadThumbnailFile = () => {
+    if (!thumbnailAnchorRef.current || !ffImageFile) return;
+    thumbnailAnchorRef.current.href = ffImageFile;
+    thumbnailAnchorRef.current.download = "thumbnail.jpg";
+  };
+
+  const onHome = () => {
+    router.replace("/");
   };
 
   return (
@@ -127,16 +160,35 @@ const Recorder: NextPage = () => {
           </div>
           {isCompile && <span className="text-zinc-50">loading...</span>}
           {isDownLoad && (
-            <div className="p-1 text-sm bg-orange-500 hover:bg-orange-600 transition-all rounded-lg cursor-pointer">
-              <a
-                className="text-zinc-50"
-                ref={anchorRef}
-                onClick={onDownLoadRecodingFile}
-                download
+            <>
+              <div className="p-1 text-sm bg-orange-500 hover:bg-orange-600 transition-all rounded-lg cursor-pointer">
+                <a
+                  className="text-zinc-50"
+                  ref={videoAnchorRef}
+                  onClick={onDownLoadRecodingFile}
+                  download
+                >
+                  DownLoad Video.
+                </a>
+              </div>
+              <div className="p-1 text-sm bg-orange-500 hover:bg-orange-600 transition-all rounded-lg cursor-pointer">
+                <a
+                  className="text-zinc-50"
+                  ref={thumbnailAnchorRef}
+                  onClick={onDownLoadThumbnailFile}
+                  download
+                >
+                  DownLoad Thumbnail.
+                </a>
+              </div>
+
+              <div
+                onClick={onHome}
+                className="p-1 text-sm bg-orange-500 hover:bg-orange-600 transition-all rounded-lg cursor-pointer"
               >
-                Start Download
-              </a>
-            </div>
+                <a>Done.</a>
+              </div>
+            </>
           )}
         </div>
       </div>

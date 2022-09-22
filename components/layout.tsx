@@ -99,14 +99,14 @@ const Layout: React.FC<LayoutProps> = ({ children, uploadPage }) => {
   const userLogout = () => {
     if (loading) return;
     logout({});
-    router.replace("login");
+    router.replace("/login");
   };
 
   type UserState = "login" | "logout";
   const onLoginPage = (state: UserState) => {
     switch (state) {
       case "login":
-        router.push("login");
+        router.push("/login");
         break;
       case "logout":
         userLogout();

@@ -23,6 +23,7 @@ export interface Video {
   description: string;
   createAt: Date;
   hashtags: string;
+  thumbnailURL: string;
   meta: {
     view: number;
   };

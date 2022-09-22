@@ -22,7 +22,7 @@ const Input: React.FC<InputProps> = ({
       </label>
       <input
         {...register}
-        className="px-2 py-1 rounded-md text-zinc-700"
+        className="px-2 py-1 rounded-md text-zinc-700 shadow-black shadow-md"
         id={id}
         type={type}
         placeholder={placeholder}

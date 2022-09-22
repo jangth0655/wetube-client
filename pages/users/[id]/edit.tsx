@@ -11,9 +11,10 @@ import ShareButton from "../../../components/shared/shareButton";
 import { FaUser } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import useMutation from "../../../libs/mutation";
-import axios from "axios";
-import BASE_URL from "../../../server";
+
 import Link from "next/link";
+import uploadFileProcess from "../../../libs/uploadFIleProcess";
+import ErrorMessage from "../../../components/shared/ErrorMessage";
 
 interface EditProfileProps {}
 
@@ -28,6 +29,7 @@ interface EditForm {
 
 interface EditMutation {
   ok: boolean;
+  error?: string;
 }
 
 const EditProfile: React.FC<EditProfileProps> = () => {
@@ -41,28 +43,37 @@ const EditProfile: React.FC<EditProfileProps> = () => {
     formState: { errors },
     setError,
     setValue,
+    clearErrors,
   } = useForm<EditForm>();
 
-  const [edit, { data, error, loading }] = useMutation<EditMutation>(
+  const [edit, { data: editData, error, loading }] = useMutation<EditMutation>(
     `users/${user?._id}/edit`
   );
 
   const onValid = async (data: EditForm) => {
     if (loading) return;
-    if (data.avatarId && data.avatarId.length > 0) {
-      const form = new FormData();
-      form.append("file", data.avatarId[0], `${user?.username}-avatars`);
-      const avatarFile = (
-        await axios(`${BASE_URL}/users/awsUpload`, {
-          method: "POST",
-          data: form,
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        })
-      ).data;
-      edit({ ...data, avatarId: avatarFile.file.location });
+    try {
+      if (data.avatarId && data.avatarId.length > 0) {
+        const uploadFile = await uploadFileProcess(
+          data.avatarId,
+          `${user?.username}_avatars`,
+          "users"
+        );
+        if (uploadFile.error) {
+          setError("error", { message: uploadFile.error });
+          return;
+        }
+        edit({ ...data, avatarId: uploadFile.file });
+      } else {
+        edit({ ...data, avatarId: null });
+      }
+
+      if (error) {
+        setError("error", { message: error });
+      }
+    } catch (error) {
+      console.log(error);
+      setError("error", { message: editData?.error });
     }
     return;
   };
@@ -91,10 +102,17 @@ const EditProfile: React.FC<EditProfileProps> = () => {
   ]);
 
   useEffect(() => {
-    if (data && data.ok) {
+    if (editData && editData.ok) {
       router.push("/");
     }
-  }, [data, router]);
+  }, [editData, router]);
+
+  const errorStateMessage =
+    errors.email?.message ||
+    errors.location?.message ||
+    errors.name?.message ||
+    errors.username?.message ||
+    errors.error?.message;
 
   return (
     <PageNav title="Edit Profile">
@@ -139,7 +157,9 @@ const EditProfile: React.FC<EditProfileProps> = () => {
               label="Username"
               placeholder="username"
               type="text"
-              register={register("username")}
+              register={register("username", {
+                onChange: () => clearErrors("error"),
+              })}
             />
           </div>
           <div>
@@ -148,7 +168,9 @@ const EditProfile: React.FC<EditProfileProps> = () => {
               label="Email"
               placeholder="email"
               type="text"
-              register={register("email")}
+              register={register("email", {
+                onChange: () => clearErrors("error"),
+              })}
             />
           </div>
           <div>
@@ -174,6 +196,11 @@ const EditProfile: React.FC<EditProfileProps> = () => {
         <div className="mt-14 w-[70%] flex justify-center items-center rounded-md p-1 bg-orange-400 hover:bg-orange-500 transition-all cursor-pointer">
           <ShareButton text="Edit" loading={loading} />
         </div>
+        {errorStateMessage && (
+          <div className="mt-2">
+            <ErrorMessage error={errorStateMessage} />
+          </div>
+        )}
       </form>
 
       <div className="w-[70%] m-auto mt-14">
