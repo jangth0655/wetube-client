@@ -38,7 +38,6 @@ const VideoDetail: NextPage = () => {
 
   useEffect(() => {
     if (data?.video._id) {
-      console.log(data?.video._id);
       uploadView({});
     }
   }, []);

@@ -172,7 +172,7 @@ const Layout: React.FC<LayoutProps> = ({ children, uploadPage }) => {
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className="absolute top-8 w-20 h-20 right-6 rounded-3xl dark:bg-gray-700 rounded-tr-none origin-top bg-zinc-100 text-zinc-800 shadow-black shadow-sm dark:text-zinc-50"
+                className="z-20 absolute top-8 w-20 h-20 right-6 rounded-3xl dark:bg-gray-700 rounded-tr-none origin-top bg-zinc-100 text-zinc-800 shadow-black shadow-sm dark:text-zinc-50"
               >
                 <div className="py-4 px-2 w-full h-full space-y-2 flex justify-center flex-col text-center cursor-pointer">
                   <span

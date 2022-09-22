@@ -31,8 +31,6 @@ const EditPassword = () => {
   const [editPassword, { data, error, loading }] =
     useMutation<EditPasswordMutation>(`users/${userId}/change-password`);
 
-  console.log(data);
-
   const onValid = (data: EditPasswordForm) => {
     if (loading) return;
     if (error) {

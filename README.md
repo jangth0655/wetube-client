@@ -6,7 +6,7 @@
       <img style="border-radius:10px" height="70" src="./assets/wetube-logo.png" />
     </div>
     <a display="block" href="hhttps://girn-market.vercel.app/" >
-      https://girn-market.vercel.app/
+      https://wetube-client.vercel.app/
     </a>
     <br />
 </div>
@@ -33,7 +33,6 @@
 - `swr, axios`
 - `React-hook-form`
 - `ffmpeg`
-- code : <a>https://github.com/jangth0655/wetube-client</a>
 
 ### Back-end
 
@@ -42,6 +41,7 @@
 - `MongoDB`
 - `Vercel`
 - `aws`
+- code : <a>https://github.com/jangth0655/wetube-server</a>
 
 ### Deploy
 
@@ -51,6 +51,8 @@
 <br></br><br></br>
 
 ## Project
+
+- 영상을 업로드 하거나 웹캠으로 녹화하여 업로드할 수 있는 애플리케이션으로, 서로 다른 사람들끼리 영상을 공유하고 의견을 나눌 수 있는 애플리케이션입니다.
 
 > 회원가입, 로그인, 로그아웃
 
@@ -74,18 +76,18 @@
 - 제목과 해쉬태그, 설명을 입력하여 업로드 할 수 있습니다.
   <br></br>
 
+> 상세 페이지
+
+- 비디오를 커스트마이징하여 재생, 정지, progress bar 조절, 볼륨 조절, 전체화면을 할 수 있습니다.
+- 댓글을 남길 수 있습니다.
+  <br></br>
+
 > 비디오 편집 및 삭제
 
 - 해당 비디오 유저만 편집 페이지로 이동할 수 있습니다.
 - 비디오의 제목과 해쉬태그, 설명을 수정할 수 있습니다.
 - 비디오를 삭제할 수 있습니다.  
   → aws 버킷에서도 삭제됩니다.
-  <br></br>
-
-> 상세 페이지
-
-- 비디오를 커스트마이징하여 재생, 정지, progress bar 조절, 볼륨 조절, 전체화면을 할 수 있습니다.
-- 댓글을 남길 수 있습니다.
   <br></br>
 
 > 검색
