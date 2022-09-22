@@ -62,7 +62,9 @@
   → express-session의 세션 ID를 MongoStore를 활용하여 MongoDB에 저장하고,  
   → 쿠키를 통해 세션 ID를 주고 받으면서 인증을 구현했습니다.
 - 유저의 아바타를 클릭하여 로그인 유저는 로그아웃, 그렇지 않으면 로그인을 할 수있습니다.
-  <br></br>
+  <br />
+  <img height="500" src="./public/image/preview/login.gif" />
+  <br /><br />
 
 > 메인(홈)
 
@@ -74,13 +76,17 @@
 
 - PC에서 비디오를 업로드 할 수 있습니다.
 - 제목과 해쉬태그, 설명을 입력하여 업로드 할 수 있습니다.
-  <br></br>
+  <br />
+  <img height="500" src="./public/image/preview/upload-video.gif" />
+  <br /><br />
 
 > 상세 페이지
 
 - 비디오를 커스트마이징하여 재생, 정지, progress bar 조절, 볼륨 조절, 전체화면을 할 수 있습니다.
 - 댓글을 남길 수 있습니다.
-  <br></br>
+  <br />
+  <img height="500" src="./public/image/preview/videao-detail.gif" />
+  <br /><br />
 
 > 비디오 편집 및 삭제
 
@@ -88,12 +94,17 @@
 - 비디오의 제목과 해쉬태그, 설명을 수정할 수 있습니다.
 - 비디오를 삭제할 수 있습니다.  
   → aws 버킷에서도 삭제됩니다.
-  <br></br>
+  <br />
+  <img height="500" src="./public/image/preview/video-edit.gif" />
+  <br /><br />
 
 > 검색
 
 - 비디오 제목으로 비디오를 검색할 수 있습니다.
-  <br></br>
+
+  <br />
+  <img height="500" src="./public/image/preview/search-video.gif" />
+  <br /><br />
 
 > 프로필
 
@@ -109,14 +120,18 @@
 - 패스워드 페이지로 이동하여 패스워드 편집을 할 수 있습니다.  
   → bcrypt를 이용하여 패스워드를 비교합니다.  
   → 패스워드 확인을 하여 최종적으로 패스워드를 변경할 수 있습니다.
-  <br></br>
+  <br />
+  <img height="500" src="./public/image/preview/profile-edit.gif" />
+  <br /><br />
 
 > 비디오 녹화 및 다운로드
 
 - 시작하기를 클릭하여 웹캠 통해 녹화 화면을 확인할 수 있습니다.
 - 비디오 아이콘을 클릭하여 녹화를 진행할 수 있습니다.
 - 녹화가 완료되면 PC에 다운로드할 수 있습니다.
-  <br></br><br></br>
+  <br />
+  <img height="500" src="./public/image/preview/video-recoding.gif" />
+  <br /><br />
 
 ## Features
 
