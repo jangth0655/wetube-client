@@ -54,7 +54,7 @@ const Login: NextPage = () => {
 
   useEffect(() => {
     if (error) {
-      setError("error", { message: error });
+      setError("error", { message: "login server error" });
     }
   }, [error, setError]);
 

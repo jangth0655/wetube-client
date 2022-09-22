@@ -20,14 +20,21 @@ const useMutation = <T = any,>(url: string): MutationResponse<T> => {
     try {
       setValue((prev) => ({ ...prev, loading: true }));
       const response = await (
-        await axios(`${process.env.NEXT_PUBLIC_SERVER!}/${url}`, {
-          method: "POST",
-          data: JSON.stringify(data),
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        })
+        await axios(
+          `${
+            process.env.NODE_ENV === "production"
+              ? process.env.NEXT_PUBLIC_SERVER!
+              : process.env.NEXT_PUBLIC_LOCAL_SERVER
+          }/${url}`,
+          {
+            method: "POST",
+            data: JSON.stringify(data),
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        )
       ).data;
       if (response.error) {
         setValue((prev) => ({
