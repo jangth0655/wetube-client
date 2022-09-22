@@ -4,22 +4,10 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { HiSearch } from "react-icons/hi";
-import { User, Video } from "../libs/interface";
-import BASE_URL from "../server";
 
 interface SearchForm {
   keyword: string;
   error?: string;
-}
-
-export interface VideoWithUser extends Video {
-  user: User;
-}
-
-interface SearchMutation {
-  ok: boolean;
-  error?: string;
-  videos: VideoWithUser[];
 }
 
 const searchVar: Variants = {
@@ -37,12 +25,9 @@ const searchVar: Variants = {
 const Search: React.FC = () => {
   const router = useRouter();
   const [active, setActive] = useState(false);
-  const [searchResponse, setSearchResponse] = useState<SearchMutation>({
-    ok: false,
-    videos: [],
-    error: undefined,
-  });
+
   const [keyword, setKeyword] = useState("");
+
   const onSearch = () => {
     setActive((prev) => !prev);
   };
@@ -53,7 +38,7 @@ const Search: React.FC = () => {
     formState: { errors },
   } = useForm<SearchForm>();
 
-  const fetchKeyword = async (keyword: string) => {
+  /*   const fetchKeyword = async (keyword: string) => {
     const result = await (
       await fetch(`${BASE_URL}/videos/search/${keyword}`, {
         method: "POST",
@@ -70,34 +55,22 @@ const Search: React.FC = () => {
       loading: !result && !result.error,
       error: result.error,
     };
-  };
+  }; */
 
-  const onValid = async ({ keyword }: SearchForm) => {
-    const { data, error, loading } = await fetchKeyword(keyword);
-    if (loading) return;
-    if (data) {
-      setKeyword(keyword);
-      setSearchResponse({
-        ok: true,
-        error,
-        videos: data,
-      });
-    }
-    setError("error", { message: error });
-    return;
+  const onValid = (data: SearchForm) => {
+    setKeyword(data.keyword);
   };
 
   useEffect(() => {
-    if (searchResponse.ok) {
+    if (keyword) {
       router.push({
         pathname: "/search",
         query: {
-          videos: JSON.stringify(searchResponse.videos),
           keyword,
         },
       });
     }
-  }, [keyword, router, searchResponse.ok, searchResponse.videos]);
+  }, [keyword, router]);
 
   return (
     <form

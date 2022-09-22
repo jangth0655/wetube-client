@@ -1,18 +1,32 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import useSWR from "swr";
 import PageNav from "../components/PageNav";
-import { VideoWithUser } from "../components/Search";
 import VideoList from "../components/videoList";
+import { User, Video } from "../libs/interface";
+import BASE_URL from "../server";
+
+export interface VideoWithUser extends Video {
+  user: User;
+}
+
+interface SearchResponse {
+  ok: boolean;
+  error?: string;
+  videos: VideoWithUser[];
+}
 
 const Search: NextPage = () => {
   const router = useRouter();
-  const videos: VideoWithUser[] = JSON.parse(router.query.videos as any);
-  const itemTitle = router.query.keyword;
+  const keyword = router.query.keyword;
+  const { data } = useSWR<SearchResponse>(
+    `${BASE_URL}/videos/search/${keyword}`
+  );
 
   return (
-    <PageNav title={`${itemTitle}`}>
-      <div className="grid  sm:grid-cols-2 md:grid-cols-3 gap-6 space-y-20 sm:space-y-0">
-        {videos?.map((video) => (
+    <PageNav title={`${keyword}`}>
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 space-y-20 sm:space-y-0">
+        {data?.videos?.map((video) => (
           <div key={video._id}>
             <VideoList video={video} user={video.user} />
           </div>

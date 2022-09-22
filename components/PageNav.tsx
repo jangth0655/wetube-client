@@ -53,7 +53,7 @@ const PageNav: React.FC<PageNavProps> = ({ title, children }) => {
   };
 
   return (
-    <section className="dark:text-zinc-50 max-w-3xl m-auto">
+    <section className="dark:text-zinc-50 max-w-4xl m-auto px-2">
       <nav className="relative flex items-center p-3 pt-10 justify-between ">
         <div
           onClick={onBack}
